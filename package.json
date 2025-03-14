@@ -4,7 +4,13 @@
   "description": "Vibe Programmer",
   "main": "index.js",
   "scripts": {
-    "dev": ""
+    "dev": "concurrently npm:dev:*",
+    "dev:start": "mkdir -p dist && touch dist/main.js && node --watch-path dist --env-file=.env dist/main.js",
+    "clean": "rm -rf dist",
+    "start": "NODE_ENV=production node dist/main.js",
+    "preview": "NODE_ENV=production node --env-file=.env dist/main.js",
+    "build": "esbuild src/main.ts --platform=node --sourcemap --target=node20 --bundle --outdir=dist --loader:.txt=text",
+    "dev:build": "npm run build -- --watch"
   },
   "repository": {
     "type": "git",
@@ -16,5 +22,10 @@
   "bugs": {
     "url": "https://github.com/aipx-proto/viber/issues"
   },
-  "homepage": "https://github.com/aipx-proto/viber#readme"
+  "homepage": "https://github.com/aipx-proto/viber#readme",
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "esbuild": "^0.25.1",
+    "openai": "^4.87.3"
+  }
 }
