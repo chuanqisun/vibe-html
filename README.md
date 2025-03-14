@@ -1,2 +1,3 @@
-# viber
-A vibe coding dev server
+# Viper
+
+**vi**be **p**rogramm**er**

@@ -1,0 +1,20 @@
+{
+  "name": "viper",
+  "version": "1.0.0",
+  "description": "Vibe Programmer",
+  "main": "index.js",
+  "scripts": {
+    "dev": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aipx-proto/viber.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aipx-proto/viber/issues"
+  },
+  "homepage": "https://github.com/aipx-proto/viber#readme"
+}
