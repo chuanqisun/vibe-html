@@ -33,7 +33,7 @@ customElements.define(
   "fluent-icon",
   class extends HTMLElement {
     static get observedAttributes() {
-      return ["name", "size", "width", "height"];
+      return ["name", "size", "width", "height", "fill"];
     }
 
     connectedCallback() {
@@ -46,9 +46,15 @@ customElements.define(
 
     render() {
       const lower_case_name = this.getAttribute("name").toLowerCase().replace(/ /g, "_");
+      const fillMode = this.hasAttribute("fill") ? "filled" : "regular";
       const width = this.getAttribute("size") ?? this.getAttribute("width") ?? 16;
       const height = this.getAttribute("height") ?? this.getAttribute("size") ?? 16;
-      fetch(`https://esm.sh/@fluentui/svg-icons@1.1.279/icons/${lower_case_name}_24_regular.svg?raw`)
+
+      Promise.any([
+        fetch(`https://esm.sh/@fluentui/svg-icons@1.1.279/icons/${lower_case_name}_24_${fillMode}.svg?raw`),
+        fetch(`https://esm.sh/@fluentui/svg-icons@1.1.279/icons/${lower_case_name}_20_${fillMode}.svg?raw`),
+        fetch(`https://esm.sh/@fluentui/svg-icons@1.1.279/icons/${lower_case_name}_16_${fillMode}.svg?raw`),
+      ])
         .then((res) => res.text())
         .then((src) => {
           this.innerHTML = src;
