@@ -10,6 +10,7 @@
         color-scheme: light dark;
         --block-bg: color-mix(in srgb, currentColor 10%, transparent);
         --block-outline: color-mix(in srgb, currentColor 50%, transparent 50%);
+        --block-outline-selected: ActiveText;
       }
 
       *,
@@ -36,16 +37,28 @@
         display: flex;
         flex-direction: column;
         align-content: start;
-        padding: 0.5rem;
         gap: 1rem;
-        border-radius: 4px;
+        padding: 0.5rem;
         background-color: var(--block-bg);
+      }
 
+      body,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p,
+      div {
+        border-radius: 4px;
+
+        &[selected],
         &:hover {
           outline: 2px solid var(--block-outline);
           outline-offset: -1px;
         }
-        &:has(*:hover) {
+        &:not([selected]):has(*:hover) {
           outline: none;
         }
 
@@ -92,6 +105,10 @@
         }
         &[scroll] {
           overflow: auto;
+        }
+
+        &[selected] {
+          outline-color: var(--block-outline-selected);
         }
       }
     </style>
@@ -145,6 +162,16 @@
       <div>Icon</div>
       <div>Icon</div>
     </div>
-    <script type="module"></script>
+    <script type="module">
+      document.addEventListener("click", (e) => {
+        if (!e.ctrlKey) {
+          document.querySelectorAll("[selected]").forEach((el) => {
+            if (el === e.target) return;
+            el.removeAttribute("selected");
+          });
+        }
+        e.target.toggleAttribute("selected");
+      });
+    </script>
   </body>
 </html>
