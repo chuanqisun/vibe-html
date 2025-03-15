@@ -31,13 +31,6 @@
         display: flex;
       }
 
-      [dark] {
-        color-scheme: dark;
-      }
-      [light] {
-        color-scheme: light;
-      }
-
       body,
       div {
         display: flex;
@@ -97,7 +90,6 @@
         &[fill="4"] {
           flex-grow: 4;
         }
-
         &[scroll] {
           overflow: auto;
         }
@@ -105,21 +97,39 @@
     </style>
   </head>
   <body cols>
-    <div>1</div>
+    <div>
+      <div cols spread>
+        <div>Search</div>
+        <div>Menu</div>
+      </div>
+      <div>
+        Section 1
+        <div>Item 1</div>
+        <div>Item 2</div>
+      </div>
+      <div>
+        Section 2
+        <div>Item 1</div>
+        <div>Item 2</div>
+      </div>
+    </div>
     <div fill scroll>
       <div cols spread>
         <div>left</div>
         <div>right</div>
       </div>
+      <h2>Section 1</h2>
       <div cols>
         <div fill>item</div>
         <div fill>item</div>
       </div>
+      <h2>Section 2</h2>
       <div cols>
         <div fill>item</div>
         <div fill>item</div>
         <div fill>item</div>
       </div>
+      <h2>Section 3</h2>
       <div cols>
         <div fill>item</div>
         <div fill>item</div>
@@ -127,6 +137,14 @@
         <div fill>item</div>
       </div>
     </div>
-    <div hug>3</div>
+    <div hug>
+      <div>Icon</div>
+      <div>Icon</div>
+      <div>Icon</div>
+      <div>Icon</div>
+      <div>Icon</div>
+      <div>Icon</div>
+    </div>
+    <script type="module"></script>
   </body>
 </html>
