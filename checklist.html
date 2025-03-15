@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Checklist Tree Editor</title>
+    <style>
+      body {
+        font-family: sans-serif;
+      }
+      .checklist-item {
+        display: flex;
+        align-items: baseline; /* Vertically center checkbox and textarea */
+        margin-bottom: 5px;
+      }
+      .checklist-item input[type="checkbox"] {
+        vertical-align: baseline;
+      }
+      .checklist-item textarea {
+        flex-grow: 1; /* Allow textarea to take up remaining space */
+        border: none;
+        padding: 2px;
+        margin-left: 4px;
+        resize: none; /* Prevent textarea resizing */
+        font-family: inherit; /* Inherit font from body */
+        font-size: inherit;
+        field-sizing: content;
+      }
+      .checklist-item:focus-within {
+        textarea {
+          outline: 1px solid color-mix(in srgb, currentColor 50%, transparent 50%);
+        }
+      }
+      .indent-0 {
+        margin-left: 0px;
+      }
+      .indent-1 {
+        margin-left: 20px;
+      }
+      .indent-2 {
+        margin-left: 40px;
+      }
+      .indent-3 {
+        margin-left: 60px;
+      }
+      .indent-4 {
+        margin-left: 80px;
+      }
+      .indent-5 {
+        margin-left: 100px;
+      }
+      .indent-6 {
+        margin-left: 120px;
+      }
+      .indent-7 {
+        margin-left: 140px;
+      }
+      .indent-8 {
+        margin-left: 160px;
+      }
+      .indent-9 {
+        margin-left: 180px;
+      }
+      .indent-10 {
+        margin-left: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="checklist">
+      <div class="checklist-item indent-0"><input type="checkbox" /><textarea rows="1">App root</textarea></div>
+    </div>
+
+    <button id="printButton">Print</button>
+
+    <script>
+      const checklistDiv = document.getElementById("checklist");
+      const printButton = document.getElementById("printButton");
+
+      // Function to create a new checklist item
+      function createChecklistItem(indent = 0) {
+        const itemDiv = document.createElement("div");
+        itemDiv.classList.add("checklist-item");
+        itemDiv.classList.add(`indent-${indent}`);
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+
+        const textarea = document.createElement("textarea");
+        textarea.rows = 1;
+
+        itemDiv.appendChild(checkbox);
+        itemDiv.appendChild(textarea);
+
+        // Event listener for textarea keydown
+        textarea.addEventListener("keydown", handleTextareaKeydown);
+
+        return itemDiv;
+      }
+
+      // Function to get the current indent level
+      function getCurrentIndent(itemDiv) {
+        for (let i = 0; i <= 10; i++) {
+          if (itemDiv.classList.contains(`indent-${i}`)) {
+            return i;
+          }
+        }
+        return 0; // Default indent
+      }
+
+      // Function to update the indent class
+      function updateIndentClass(itemDiv, newIndent) {
+        const currentIndent = getCurrentIndent(itemDiv);
+        itemDiv.classList.remove(`indent-${currentIndent}`);
+        itemDiv.classList.add(`indent-${newIndent}`);
+      }
+
+      // Handle keydown events in the textarea
+      function handleTextareaKeydown(event) {
+        const textarea = event.target;
+        const itemDiv = textarea.parentElement;
+        const items = Array.from(checklistDiv.querySelectorAll(".checklist-item"));
+        const currentIndex = items.indexOf(itemDiv);
+
+        // Enter key: Create a new item at the same level
+        if (event.key === "Enter" && !event.shiftKey) {
+          event.preventDefault();
+          const currentIndent = getCurrentIndent(itemDiv);
+          const newItem = createChecklistItem(currentIndent);
+          checklistDiv.insertBefore(newItem, itemDiv.nextSibling);
+          newItem.querySelector("textarea").focus();
+        }
+
+        // Tab key: Toggle Checkbox
+        else if (event.key === "Tab") {
+          event.preventDefault();
+          const checkbox = itemDiv.querySelector('input[type="checkbox"]');
+          checkbox.checked = !checkbox.checked;
+        }
+
+        // Up arrow key
+        else if (event.key === "ArrowUp" && !event.altKey) {
+          event.preventDefault();
+          if (currentIndex > 0) {
+            items[currentIndex - 1].querySelector("textarea").focus();
+          }
+        }
+
+        // Down arrow key
+        else if (event.key === "ArrowDown" && !event.altKey) {
+          event.preventDefault();
+          if (currentIndex < items.length - 1) {
+            items[currentIndex + 1].querySelector("textarea").focus();
+          }
+        }
+
+        // Backspace or Delete key: Remove item if empty
+        else if ((event.key === "Backspace" || event.key === "Delete") && textarea.value === "") {
+          event.preventDefault();
+          if (items.length > 1) {
+            // Keep at least one item
+            if (currentIndex > 0) {
+              items[currentIndex - 1].querySelector("textarea").focus();
+            } else {
+              items[currentIndex + 1].querySelector("textarea").focus();
+            }
+            itemDiv.remove();
+          }
+        }
+
+        // Shift + Space: Toggle checkbox
+        else if (event.shiftKey && event.code === "Space") {
+          event.preventDefault();
+          const checkbox = itemDiv.querySelector('input[type="checkbox"]');
+          checkbox.checked = !checkbox.checked;
+        }
+        // Alt + Up arrow: Move item up
+        else if (event.key === "ArrowUp" && event.altKey) {
+          event.preventDefault();
+          if (currentIndex > 0) {
+            const prevItem = items[currentIndex - 1];
+            checklistDiv.insertBefore(itemDiv, prevItem);
+            textarea.focus(); // Keep focus on the moved item
+          }
+        }
+
+        // Alt + Down arrow: Move item down
+        else if (event.key === "ArrowDown" && event.altKey) {
+          event.preventDefault();
+          if (currentIndex < items.length - 1) {
+            const nextItem = items[currentIndex + 1];
+            checklistDiv.insertBefore(nextItem, itemDiv);
+            textarea.focus(); // Keep focus on the moved item
+          }
+        }
+
+        // Alt + Left arrow: Outdent
+        else if (event.key === "ArrowLeft" && event.altKey) {
+          event.preventDefault();
+          const currentIndent = getCurrentIndent(itemDiv);
+          const newIndent = Math.max(0, currentIndent - 1); // Prevent negative indent
+          updateIndentClass(itemDiv, newIndent);
+        }
+
+        // Alt + Right arrow: Indent
+        else if (event.key === "ArrowRight" && event.altKey) {
+          event.preventDefault();
+          const currentIndent = getCurrentIndent(itemDiv);
+          const newIndent = Math.min(10, currentIndent + 1); // Limit indent
+          updateIndentClass(itemDiv, newIndent);
+        }
+      }
+
+      // Initial item event listener
+      checklistDiv.querySelector("textarea").addEventListener("keydown", handleTextareaKeydown);
+
+      // Print button click handler
+      printButton.addEventListener("click", () => {
+        let markdownOutput = "";
+        const items = checklistDiv.querySelectorAll(".checklist-item");
+
+        items.forEach((item) => {
+          const checkbox = item.querySelector('input[type="checkbox"]');
+          const textarea = item.querySelector("textarea");
+          const indentLevel = getCurrentIndent(item);
+          const indentStr = "  ".repeat(indentLevel); // Two spaces per indent level
+          const checkedStr = checkbox.checked ? "[x]" : "[ ]";
+          markdownOutput += `${indentStr}- ${checkedStr} ${textarea.value}\n`;
+        });
+
+        console.log(markdownOutput);
+      });
+    </script>
+  </body>
+</html>
