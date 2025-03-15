@@ -52,11 +52,14 @@ img,
 span,
 div {
   border-radius: 4px;
+  outline-offset: -1px;
+  &:where(body) {
+    outline-offset: -2px;
+  }
 
   &[selected],
   &:hover {
     outline: 2px solid var(--block-outline);
-    outline-offset: -1px;
   }
   &:not([selected]):has(*:hover) {
     outline: none;
