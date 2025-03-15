@@ -64,53 +64,53 @@ div {
   &:not([selected]):has(*:hover) {
     outline: none;
   }
+}
 
-  &[cols] {
-    flex-direction: row;
-  }
+[cols] {
+  flex-direction: row;
+}
 
-  &[spread] {
-    justify-content: space-between;
-  }
+[spread] {
+  justify-content: space-between;
+}
 
-  &[wrap] {
-    flex-wrap: wrap;
-    flex-direction: row;
-  }
+[wrap] {
+  flex-wrap: wrap;
+  flex-direction: row;
+}
 
-  &[hug] {
-    align-self: start;
-  }
-  &[hug="start"] {
-    align-self: start;
-  }
-  &[hug="center"] {
-    align-self: center;
-  }
-  &[hug="end"] {
-    align-self: end;
-  }
+[hug] {
+  align-self: start;
+}
+[hug="start"] {
+  align-self: start;
+}
+[hug="center"] {
+  align-self: center;
+}
+[hug="end"] {
+  align-self: end;
+}
 
-  &[fill] {
-    flex-grow: 1;
-  }
-  &[fill="1"] {
-    flex-grow: 1;
-  }
-  &[fill="2"] {
-    flex-grow: 2;
-  }
-  &[fill="3"] {
-    flex-grow: 3;
-  }
-  &[fill="4"] {
-    flex-grow: 4;
-  }
-  &[scroll] {
-    overflow: auto;
-  }
+[fill] {
+  flex-grow: 1;
+}
+[fill="1"] {
+  flex-grow: 1;
+}
+[fill="2"] {
+  flex-grow: 2;
+}
+[fill="3"] {
+  flex-grow: 3;
+}
+[fill="4"] {
+  flex-grow: 4;
+}
+[scroll] {
+  overflow: auto;
+}
 
-  &[selected] {
-    outline-color: var(--block-outline-selected);
-  }
+[selected] {
+  outline-color: var(--block-outline-selected);
 }
