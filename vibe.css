@@ -1,5 +1,6 @@
 :root {
-  color-scheme: light dark;
+  color-scheme: dark light;
+
   --block-bg: color-mix(in srgb, currentColor 4%, transparent);
   --block-outline: color-mix(in srgb, currentColor 50%, transparent);
   --block-outline-selected: ActiveText;
