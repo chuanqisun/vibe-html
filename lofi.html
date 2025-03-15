@@ -3,10 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" />
     <title>Document</title>
     <style>
       :root {
-        /* color-scheme: dark; */
+        color-scheme: light dark;
+        --block-bg: color-mix(in srgb, currentColor 10%, transparent);
+        --block-outline: color-mix(in srgb, currentColor 50%, transparent 50%);
       }
 
       *,
@@ -28,6 +31,13 @@
         display: flex;
       }
 
+      [dark] {
+        color-scheme: dark;
+      }
+      [light] {
+        color-scheme: light;
+      }
+
       body,
       div {
         display: flex;
@@ -36,10 +46,10 @@
         padding: 0.5rem;
         gap: 1rem;
         border-radius: 4px;
-        background-color: color-mix(in srgb, currentColor 10%, transparent);
+        background-color: var(--block-bg);
 
         &:hover {
-          outline: 2px solid color-mix(in srgb, currentColor 50%, transparent 50%);
+          outline: 2px solid var(--block-outline);
           outline-offset: -1px;
         }
         &:has(*:hover) {
@@ -48,6 +58,10 @@
 
         &[cols] {
           flex-direction: row;
+        }
+
+        &[spread] {
+          justify-content: space-between;
         }
 
         &[wrap] {
@@ -83,13 +97,20 @@
         &[fill="4"] {
           flex-grow: 4;
         }
+
+        &[scroll] {
+          overflow: auto;
+        }
       }
     </style>
   </head>
   <body cols>
-    <div hug>1</div>
-    <div fill>
-      <div>Page header</div>
+    <div>1</div>
+    <div fill scroll>
+      <div cols spread>
+        <div>left</div>
+        <div>right</div>
+      </div>
       <div cols>
         <div fill>item</div>
         <div fill>item</div>
@@ -106,6 +127,6 @@
         <div fill>item</div>
       </div>
     </div>
-    <div>3</div>
+    <div hug>3</div>
   </body>
 </html>
