@@ -24,8 +24,9 @@ body {
   display: flex;
 }
 
-body,
-div {
+div,
+v-rows,
+v-cols {
   display: flex;
   flex-direction: column;
   align-content: start;
@@ -39,7 +40,15 @@ span {
   gap: 0.5rem;
 }
 
-body,
+v-cols {
+  flex-direction: row;
+}
+
+v-icon {
+  display: contents;
+}
+
+/** selectable */
 h1,
 h2,
 h3,
@@ -50,67 +59,70 @@ svg,
 p,
 img,
 span,
+v-rows,
+v-cols,
 div {
   border-radius: 4px;
   outline-offset: -1px;
-  &:where(body) {
-    outline-offset: -2px;
-  }
 
-  &[selected],
+  &[data-selected],
   &:hover {
-    outline: 2px solid var(--block-outline);
+    outline: 1px solid var(--block-outline);
   }
-  &:not([selected]):has(*:hover) {
+  &:not([data-selected]):has(*:hover) {
     outline: none;
   }
-
-  &[cols] {
-    flex-direction: row;
-  }
-
-  &[spread] {
-    justify-content: space-between;
-  }
-
-  &[wrap] {
-    flex-wrap: wrap;
-    flex-direction: row;
-  }
-
-  &[hug] {
-    align-self: start;
-  }
-  &[hug="start"] {
-    align-self: start;
-  }
-  &[hug="center"] {
-    align-self: center;
-  }
-  &[hug="end"] {
-    align-self: end;
-  }
-
-  &[fill] {
-    flex-grow: 1;
-  }
-  &[fill="1"] {
-    flex-grow: 1;
-  }
-  &[fill="2"] {
-    flex-grow: 2;
-  }
-  &[fill="3"] {
-    flex-grow: 3;
-  }
-  &[fill="4"] {
-    flex-grow: 4;
-  }
-  &[scroll] {
-    overflow: auto;
-  }
-
-  &[selected] {
+  &[data-selected] {
     outline-color: var(--block-outline-selected);
   }
+}
+
+/** layout */
+[spread] {
+  justify-content: space-between;
+}
+
+[wrap] {
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+[hug] {
+  align-self: start;
+}
+[hug="start"] {
+  align-self: start;
+}
+[hug="center"] {
+  align-self: center;
+}
+[hug="end"] {
+  align-self: end;
+}
+
+[fill] {
+  flex-grow: 1;
+}
+[fill="1"] {
+  flex-grow: 1;
+}
+[fill="2"] {
+  flex-grow: 2;
+}
+[fill="3"] {
+  flex-grow: 3;
+}
+[fill="4"] {
+  flex-grow: 4;
+}
+[scroll] {
+  overflow: auto;
+}
+
+[fullscreen] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }

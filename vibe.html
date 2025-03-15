@@ -7,68 +7,66 @@
     <title>Vibe HTML</title>
     <link rel="stylesheet" href="./vibe.css" />
   </head>
-  <body cols>
-    <div>
-      <div cols spread>
-        <div>
-          <span>
-            <svg width="16" height="16">
-              <use href="#search" />
-            </svg>
-            Search
-          </span>
-        </div>
-        <div>Menu</div>
-      </div>
-      <div>
-        Section 1
-        <div>Item 1</div>
-        <div>Item 2</div>
-      </div>
-      <div>
-        Section 2
-        <div>Item 1</div>
-        <div>Item 2</div>
-      </div>
-    </div>
-    <div fill scroll>
-      <div cols spread>
-        <div>left</div>
-        <div>right</div>
-      </div>
-      <h2>Section 1</h2>
-      <div cols>
-        <div fill>item</div>
-        <div fill>item</div>
-      </div>
-      <h2>Section 2</h2>
-      <div cols>
-        <div fill>item</div>
-        <div fill>item</div>
-        <div fill>item</div>
-      </div>
-      <h2>Section 3</h2>
-      <div cols>
-        <div fill>item</div>
-        <div fill>item</div>
-        <div fill>item</div>
-        <div fill>item</div>
-      </div>
-    </div>
-    <div hug>
-      <svg width="16" height="16">
-        <use href="#circle" />
-      </svg>
-      <svg width="16" height="16">
-        <use href="#circle" />
-      </svg>
-      <svg width="16" height="16">
-        <use href="#circle" />
-      </svg>
-      <svg width="16" height="16">
-        <use href="#circle" />
-      </svg>
-    </div>
+  <body>
+    <v-rows fullscreen>
+      <v-rows>
+        <v-rows hug="center">Search box</v-rows>
+      </v-rows>
+      <v-cols>
+        <v-rows>
+          <v-cols spread>
+            <v-rows>
+              <span>
+                <v-icon href="#search"></v-icon>
+                Search
+              </span>
+            </v-rows>
+            <v-rows>Menu</v-rows>
+          </v-cols>
+          <v-rows>
+            Section 1
+            <v-rows>Item 1</v-rows>
+            <v-rows>Item 2</v-rows>
+          </v-rows>
+          <v-rows>
+            Section 2
+            <v-rows>Item 1</v-rows>
+            <v-rows>Item 2</v-rows>
+          </v-rows>
+        </v-rows>
+
+        <v-rows fill scroll>
+          <v-cols spread>
+            <v-rows>left</v-rows>
+            <v-rows>right</v-rows>
+          </v-cols>
+          <h2>Section 1</h2>
+          <v-cols>
+            <v-rows fill>item</v-rows>
+            <v-rows fill>item</v-rows>
+          </v-cols>
+          <h2>Section 2</h2>
+          <v-cols>
+            <v-rows fill>item</v-rows>
+            <v-rows fill>item</v-rows>
+            <v-rows fill>item</v-rows>
+          </v-cols>
+          <h2>Section 3</h2>
+          <v-cols>
+            <v-rows fill>item</v-rows>
+            <v-rows fill>item</v-rows>
+            <v-rows fill>item</v-rows>
+            <v-rows fill>item</v-rows>
+          </v-cols>
+        </v-rows>
+        <v-rows hug>
+          <v-icon href="#circle"></v-icon>
+          <v-icon href="#circle"></v-icon>
+          <v-icon href="#circle"></v-icon>
+          <v-icon href="#circle"></v-icon>
+        </v-rows>
+      </v-cols>
+    </v-rows>
 
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
       <symbol id="search" viewBox="0 0 24 24">
