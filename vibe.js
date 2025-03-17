@@ -180,12 +180,10 @@ document.addEventListener("keydown", (e) => {
       // move the target element, not the selected element
       if (prevArrowKeysNames.includes(e.key)) {
         const target = selected.previousElementSibling;
-        console.log("t", target);
         if (!target) return;
         selected.insertAdjacentElement("afterend", target);
       } else {
         const target = selected.nextElementSibling;
-        console.log("t", target);
         if (!target) return;
         selected.insertAdjacentElement("beforebegin", target);
       }
