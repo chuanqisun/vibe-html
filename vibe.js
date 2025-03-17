@@ -12,6 +12,24 @@ document.addEventListener("click", (e) => {
 });
 
 document.addEventListener("keydown", (e) => {
+  // INSERT MODE
+  // escape - remove contenteditable (exit edit mode)
+  if (e.key === "Escape" && !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey) {
+    e.preventDefault();
+    const selected = document.querySelector("[data-selected]");
+    if (selected) {
+      selected.removeAttribute("contenteditable");
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+    }
+  }
+
+  // if in edit mode, ignore all keys except escape
+  if (e.target?.closest("[contenteditable]")) {
+    return;
+  }
+
+  // NORMAL MODE
   // s - to split an element
   if (e.key === "s" && !e.ctrlKey && !e.shiftKey && !e.altKey) {
     e.preventDefault();
@@ -269,6 +287,22 @@ document.addEventListener("keydown", (e) => {
     allSelected.forEach((e) => e.remove());
 
     nextSelectable.toggleAttribute("data-selected", true);
+  }
+
+  // i - toggle contenteditable="plaintext-only"
+  if (e.key === "i" && !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey) {
+    e.preventDefault();
+    const selected = document.querySelector("[data-selected]");
+    if (selected) {
+      selected.setAttribute("contenteditable", "plaintext-only");
+      // select all text
+      const range = document.createRange();
+      const sel = window.getSelection();
+      range.selectNodeContents(selected);
+      sel.removeAllRanges();
+      sel.addRange(range);
+      selected.focus();
+    }
   }
 });
 
