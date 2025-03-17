@@ -16,12 +16,9 @@ document.addEventListener("keydown", (e) => {
   // escape - remove contenteditable (exit edit mode)
   if (e.key === "Escape" && !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey) {
     e.preventDefault();
-    const selected = document.querySelector("[data-selected]");
-    if (selected) {
-      selected.removeAttribute("contenteditable");
-      const sel = window.getSelection();
-      sel.removeAllRanges();
-    }
+    [...document.querySelectorAll(`[contenteditable]`)].forEach((e) => e.removeAttribute("contenteditable"));
+    const sel = window.getSelection();
+    sel.removeAllRanges();
   }
 
   // if in edit mode, ignore all keys except escape
@@ -101,6 +98,28 @@ document.addEventListener("keydown", (e) => {
     }
   }
 
+  // alt + shift + down - add clone above (same as mod-d)
+  if (e.key === "ArrowDown" && e.altKey && e.shiftKey && !e.ctrlKey && !e.metaKey) {
+    e.preventDefault();
+    const selected = document.querySelector("[data-selected]");
+    if (selected) {
+      const clone = selected.cloneNode(true);
+      clone.removeAttribute("data-selected");
+      selected.parentNode.insertBefore(clone, selected);
+    }
+  }
+
+  // alt + shift + up - add clone below
+  if (e.key === "ArrowUp" && e.altKey && e.shiftKey && !e.ctrlKey && !e.metaKey) {
+    e.preventDefault();
+    const selected = document.querySelector("[data-selected]");
+    if (selected) {
+      const clone = selected.cloneNode(true);
+      clone.removeAttribute("data-selected");
+      selected.parentNode.insertBefore(clone, selected.nextSibling);
+    }
+  }
+
   // h - toggle `hug` attribute on selected element
   if (e.key === "h" && !e.ctrlKey && !e.shiftKey && !e.altKey) {
     e.preventDefault();
@@ -154,6 +173,10 @@ document.addEventListener("keydown", (e) => {
         .map((attr) => `${attr.name}="${attr.value}"`)
         .join(" ");
       selected.insertAdjacentHTML("beforeend", `<v-rows ${allExistingAttrs}></v-rows>`);
+      // select the new element
+      const newElement = selected.lastElementChild;
+      newElement.toggleAttribute("data-selected", true);
+      selected.removeAttribute("data-selected");
     }
   }
 
@@ -161,11 +184,10 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "N" && !e.ctrlKey && e.shiftKey && !e.altKey) {
     e.preventDefault();
     const selected = document.querySelector("[data-selected]");
-    if (selected && parentElementTags.includes(selected.tagName)) {
-      const allExistingAttrs = [...selected.attributes]
-        .filter((attr) => attr.name !== "data-selected")
-        .map((attr) => `${attr.name}="${attr.value}"`)
-        .join(" ");
+    if (selected) {
+      // We want selection to be on the new element
+      const allExistingAttrs = [...selected.attributes].map((attr) => `${attr.name}="${attr.value}"`).join(" ");
+      selected.removeAttribute("data-selected");
       selected.outerHTML = `<v-rows ${allExistingAttrs}>${selected.outerHTML}</v-rows>`;
     }
   }
