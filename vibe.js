@@ -1,4 +1,4 @@
-const selectableElementTags = ["H1", "H2", "H3", "H4", "H5", "H6", "SVG", "P", "IMG", "SPAN", "V-ROWS", "V-COLS"];
+const selectableElementTags = ["H1", "H2", "H3", "H4", "H5", "H6", "SVG", "P", "IMG", "SPAN", "V-ROWS", "V-COLS", "DIV"];
 const parentElementTags = ["V-ROWS", "V-COLS", "DIV"];
 
 document.addEventListener("click", (e) => {
@@ -152,6 +152,42 @@ document.addEventListener("keydown", (e) => {
         selected.removeAttribute("fill");
       } else {
         selected.setAttribute("fill", e.key);
+      }
+    }
+  }
+
+  // arrow left/up - previous, arrow right/down - next
+  const prevArrowKeysNames = ["ArrowLeft", "ArrowUp"];
+  const nextArrowKeysNames = ["ArrowRight", "ArrowDown"];
+
+  if ([...prevArrowKeysNames, ...nextArrowKeysNames].includes(e.key) && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+    e.preventDefault();
+    const selected = document.querySelector("[data-selected]");
+    if (selected) {
+      const target = prevArrowKeysNames.includes(e.key) ? selected.previousElementSibling : selected.nextElementSibling;
+      if (target && selectableElementTags.includes(target.tagName)) {
+        target.toggleAttribute("data-selected", true);
+        selected.removeAttribute("data-selected");
+      }
+    }
+  }
+
+  // alt + arrow - move
+  if ([...prevArrowKeysNames, ...nextArrowKeysNames].includes(e.key) && !e.ctrlKey && !e.shiftKey && e.altKey) {
+    e.preventDefault();
+    const selected = document.querySelector("[data-selected]");
+    if (selected) {
+      // move the target element, not the selected element
+      if (prevArrowKeysNames.includes(e.key)) {
+        const target = selected.previousElementSibling;
+        console.log("t", target);
+        if (!target) return;
+        selected.insertAdjacentElement("afterend", target);
+      } else {
+        const target = selected.nextElementSibling;
+        console.log("t", target);
+        if (!target) return;
+        selected.insertAdjacentElement("beforebegin", target);
       }
     }
   }
