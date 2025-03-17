@@ -117,8 +117,8 @@ document.addEventListener("keydown", (e) => {
     }
   }
 
-  // c - insert a child <v-rows> beforeend
-  if (e.key === "c" && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+  // n - new child <v-rows> beforeend
+  if (e.key === "n" && !e.ctrlKey && !e.shiftKey && !e.altKey) {
     e.preventDefault();
     const selected = document.querySelector("[data-selected]");
     if (selected && parentElementTags.includes(selected.tagName)) {
@@ -130,8 +130,8 @@ document.addEventListener("keydown", (e) => {
     }
   }
 
-  // p - put the current element into a parent <v-rows>
-  if (e.key === "p" && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+  // shift + n - new parent <v-rows>
+  if (e.key === "N" && !e.ctrlKey && e.shiftKey && !e.altKey) {
     e.preventDefault();
     const selected = document.querySelector("[data-selected]");
     if (selected && parentElementTags.includes(selected.tagName)) {
@@ -217,8 +217,45 @@ document.addEventListener("keydown", (e) => {
       }
     }
   }
+
+  // tab - select next in pre-order tree traversal. If not next, continue. Ultimately wrap around.
+  if (e.key === "Tab" && !e.shiftKey && !e.ctrlKey && !e.altKey) {
+    e.preventDefault();
+    const selected = document.querySelector("[data-selected]");
+    if (selected) {
+      const allElements = [...document.querySelectorAll("*")].filter((el) => selectableElementTags.includes(el.tagName));
+      const currentIndex = allElements.indexOf(selected);
+      const nextIndex = (currentIndex + 1) % allElements.length;
+      allElements[nextIndex].toggleAttribute("data-selected", true);
+      selected.removeAttribute("data-selected");
+    }
+  }
+
+  // shift + tab reverse select
+  if (e.key === "Tab" && e.shiftKey && !e.ctrlKey && !e.altKey) {
+    e.preventDefault();
+    const selected = document.querySelector("[data-selected]");
+    if (selected) {
+      const allElements = [...document.querySelectorAll("*")].filter((el) => selectableElementTags.includes(el.tagName));
+      const currentIndex = allElements.indexOf(selected);
+      const nextIndex = (currentIndex - 1 + allElements.length) % allElements.length;
+      allElements[nextIndex].toggleAttribute("data-selected", true);
+      selected.removeAttribute("data-selected");
+    }
+  }
+
+  // x - cut all selected elements
+  if (e.key === "x" && !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey) {
+    e.preventDefault();
+    // TODO implement clipboard
+    document.querySelectorAll("[data-selected]").forEach((e) => e.remove());
+  }
 });
 
+/**
+ * Use svg icon by href
+ * @example <v-icon href="#icon-name" size="24"></v-icon>
+ */
 customElements.define(
   "v-icon",
   class extends HTMLElement {
@@ -240,6 +277,11 @@ customElements.define(
   }
 );
 
+/**
+ * Use any icon from fluent design system
+ * @example <fluent-icon name="search" size="24"></fluent-icon>
+ * See full list at aka.ms/iconcloud
+ */
 customElements.define(
   "fluent-icon",
   class extends HTMLElement {
