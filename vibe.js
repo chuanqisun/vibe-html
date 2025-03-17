@@ -164,10 +164,28 @@ document.addEventListener("keydown", (e) => {
     e.preventDefault();
     const selected = document.querySelector("[data-selected]");
     if (selected) {
-      const target = prevArrowKeysNames.includes(e.key) ? selected.previousElementSibling : selected.nextElementSibling;
-      if (target && selectableElementTags.includes(target.tagName)) {
-        target.toggleAttribute("data-selected", true);
-        selected.removeAttribute("data-selected");
+      const parent = selected.parentNode;
+      if (parent) {
+        // Get all siblings that are selectable elements
+        const selectableSiblings = [...parent.children].filter((child) => selectableElementTags.includes(child.tagName));
+
+        // Find current index in the filtered list
+        const currentIndex = selectableSiblings.indexOf(selected);
+
+        // Calculate next/previous index with circular motion
+        let nextIndex;
+        if (prevArrowKeysNames.includes(e.key)) {
+          nextIndex = currentIndex <= 0 ? selectableSiblings.length - 1 : currentIndex - 1;
+        } else {
+          nextIndex = currentIndex >= selectableSiblings.length - 1 ? 0 : currentIndex + 1;
+        }
+
+        // Select the target element
+        const target = selectableSiblings[nextIndex];
+        if (target) {
+          target.toggleAttribute("data-selected", true);
+          selected.removeAttribute("data-selected");
+        }
       }
     }
   }
@@ -177,15 +195,25 @@ document.addEventListener("keydown", (e) => {
     e.preventDefault();
     const selected = document.querySelector("[data-selected]");
     if (selected) {
-      // move the target element, not the selected element
-      if (prevArrowKeysNames.includes(e.key)) {
-        const target = selected.previousElementSibling;
-        if (!target) return;
-        selected.insertAdjacentElement("afterend", target);
-      } else {
-        const target = selected.nextElementSibling;
-        if (!target) return;
-        selected.insertAdjacentElement("beforebegin", target);
+      const parent = selected.parentNode;
+      if (parent) {
+        if (prevArrowKeysNames.includes(e.key)) {
+          const target = selected.previousElementSibling;
+          if (!target) {
+            // Move to end if at beginning
+            parent.appendChild(selected);
+          } else {
+            selected.insertAdjacentElement("afterend", target);
+          }
+        } else {
+          const target = selected.nextElementSibling;
+          if (!target) {
+            // Move to beginning if at end
+            parent.insertBefore(selected, parent.firstElementChild);
+          } else {
+            selected.insertAdjacentElement("beforebegin", target);
+          }
+        }
       }
     }
   }
