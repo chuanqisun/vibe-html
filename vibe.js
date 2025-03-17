@@ -1,5 +1,5 @@
 const selectableElementTags = ["H1", "H2", "H3", "H4", "H5", "H6", "SVG", "P", "IMG", "SPAN", "V-ROWS", "V-COLS", "DIV"];
-const parentElementTags = ["V-ROWS", "V-COLS", "DIV"];
+const parentElementTags = ["BODY", "V-ROWS", "V-COLS", "DIV"];
 
 document.addEventListener("click", (e) => {
   if (!e.ctrlKey) {
@@ -114,6 +114,15 @@ document.addEventListener("keydown", (e) => {
       }
 
       selected.toggleAttribute("wrap");
+    }
+  }
+
+  // m - toggle `max` attribute on selected element
+  if (e.key === "m" && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+    e.preventDefault();
+    const selected = document.querySelector("[data-selected]");
+    if (selected) {
+      selected.toggleAttribute("max");
     }
   }
 
@@ -248,7 +257,18 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "x" && !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey) {
     e.preventDefault();
     // TODO implement clipboard
-    document.querySelectorAll("[data-selected]").forEach((e) => e.remove());
+    // next selection is pre order traversal target of the last selected element
+
+    const allElements = [...document.querySelectorAll("*")].filter((el) => selectableElementTags.includes(el.tagName));
+
+    const allSelected = [...document.querySelectorAll("[data-selected]")];
+    const selected = allSelected[allSelected.length - 1];
+    const selectedIndex = allElements.indexOf(selected);
+    const nextSelectable = allElements[selectedIndex + 1] ?? allElements[0];
+
+    allSelected.forEach((e) => e.remove());
+
+    nextSelectable.toggleAttribute("data-selected", true);
   }
 });
 
