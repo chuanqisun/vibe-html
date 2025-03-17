@@ -1,3 +1,6 @@
+const selectableElementTags = ["H1", "H2", "H3", "H4", "H5", "H6", "SVG", "P", "IMG", "SPAN", "V-ROWS", "V-COLS"];
+const parentElementTags = ["V-ROWS", "V-COLS", "DIV"];
+
 document.addEventListener("click", (e) => {
   if (!e.ctrlKey) {
     document.querySelectorAll("[data-selected]").forEach((el) => {
@@ -6,6 +9,152 @@ document.addEventListener("click", (e) => {
     });
   }
   e.target.toggleAttribute("data-selected");
+});
+
+document.addEventListener("keydown", (e) => {
+  // s - to split an element
+  if (e.key === "s" && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+    e.preventDefault();
+    // TODO support multi-select
+    const selected = document.querySelector("[data-selected]");
+    if (selected) {
+      const clone = selected.cloneNode();
+      clone.removeAttribute("data-selected");
+      selected.parentNode.insertBefore(clone, selected.nextSibling);
+    }
+  }
+
+  // shift - enter to select parent
+  if (e.key === "Enter" && e.shiftKey && !e.ctrlKey && !e.altKey) {
+    e.preventDefault();
+    const selected = document.querySelector("[data-selected]");
+    if (selected) {
+      const parent = selected.parentNode;
+      if (parent) {
+        parent.toggleAttribute("data-selected", true);
+        selected.removeAttribute("data-selected");
+      }
+    }
+  }
+
+  // enter - to select firstb child
+  if (e.key === "Enter" && !e.shiftKey && !e.ctrlKey && !e.altKey) {
+    e.preventDefault();
+    const selected = document.querySelector("[data-selected]");
+    if (selected) {
+      const firstChild = selected.firstElementChild;
+      if (firstChild && selectableElementTags.includes(firstChild.tagName)) {
+        firstChild.toggleAttribute("data-selected", true);
+        selected.removeAttribute("data-selected");
+      }
+    }
+  }
+
+  // c - convert div or v-rows to v-cols
+  if (e.key === "c" && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+    e.preventDefault();
+    const selected = document.querySelector("[data-selected]");
+    if (selected && ["DIV", "V-ROWS"].includes(selected.tagName)) {
+      const allExistingAttrs = [...selected.attributes].map((attr) => `${attr.name}="${attr.value}"`).join(" ");
+      selected.outerHTML = `<v-cols ${allExistingAttrs}>${selected.innerHTML}</v-cols>`;
+      selected.focus();
+    }
+  }
+
+  // r - convert div or v-cols to v-rows
+  if (e.key === "r" && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+    e.preventDefault();
+    const selected = document.querySelector("[data-selected]");
+    if (selected && ["DIV", "V-COLS"].includes(selected.tagName)) {
+      const allExistingAttrs = [...selected.attributes].map((attr) => `${attr.name}="${attr.value}"`).join(" ");
+      selected.outerHTML = `<v-rows ${allExistingAttrs}>${selected.innerHTML}</v-rows>`;
+      selected.focus();
+    }
+  }
+
+  // mod-d - duplicate element (paste the clone before selection)
+  if (e.key === "d" && (e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey) {
+    e.preventDefault();
+    const selected = document.querySelector("[data-selected]");
+    if (selected) {
+      const clone = selected.cloneNode(true);
+      clone.removeAttribute("data-selected");
+      selected.parentNode.insertBefore(clone, selected);
+    }
+  }
+
+  // h - toggle `hug` attribute on selected element
+  if (e.key === "h" && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+    e.preventDefault();
+    const selected = document.querySelector("[data-selected]");
+    if (selected) {
+      selected.toggleAttribute("hug");
+    }
+  }
+
+  // f - toggle `fill` attribute on selected element
+  if (e.key === "f" && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+    e.preventDefault();
+    const selected = document.querySelector("[data-selected]");
+    if (selected) {
+      selected.toggleAttribute("fill");
+    }
+  }
+
+  // w - toggle `wrap` attribute on selected element
+  if (e.key === "w" && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+    e.preventDefault();
+    const selected = document.querySelector("[data-selected]");
+    if (selected) {
+      // if element is not v-rows or v-cols, turn it into v-rows
+      if (!["V-ROWS", "V-COLS"].includes(selected.tagName)) {
+        const allExistingAttrs = [...selected.attributes].map((attr) => `${attr.name}="${attr.value}"`).join(" ");
+        selected.outerHTML = `<v-rows ${allExistingAttrs}>${selected.innerHTML}</v-rows>`;
+        selected.focus();
+      }
+
+      selected.toggleAttribute("wrap");
+    }
+  }
+
+  // c - insert a child <v-rows> beforeend
+  if (e.key === "c" && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+    e.preventDefault();
+    const selected = document.querySelector("[data-selected]");
+    if (selected && parentElementTags.includes(selected.tagName)) {
+      const allExistingAttrs = [...selected.attributes]
+        .filter((attr) => attr.name !== "data-selected")
+        .map((attr) => `${attr.name}="${attr.value}"`)
+        .join(" ");
+      selected.insertAdjacentHTML("beforeend", `<v-rows ${allExistingAttrs}></v-rows>`);
+    }
+  }
+
+  // p - put the current element into a parent <v-rows>
+  if (e.key === "p" && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+    e.preventDefault();
+    const selected = document.querySelector("[data-selected]");
+    if (selected && parentElementTags.includes(selected.tagName)) {
+      const allExistingAttrs = [...selected.attributes]
+        .filter((attr) => attr.name !== "data-selected")
+        .map((attr) => `${attr.name}="${attr.value}"`)
+        .join(" ");
+      selected.outerHTML = `<v-rows ${allExistingAttrs}>${selected.outerHTML}</v-rows>`;
+    }
+  }
+
+  // 1-4 set fill="<number>", 0 unset fill attribute
+  if (e.key >= 0 && e.key <= 4 && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+    e.preventDefault();
+    const selected = document.querySelector("[data-selected]");
+    if (selected) {
+      if (e.key === "0") {
+        selected.removeAttribute("fill");
+      } else {
+        selected.setAttribute("fill", e.key);
+      }
+    }
+  }
 });
 
 customElements.define(
