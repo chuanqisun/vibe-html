@@ -40,6 +40,7 @@ v-rows,
 v-cols {
   display: flex;
   flex-direction: column;
+
   align-content: start;
   gap: var(--block-gap);
   padding: var(--block-padding);
@@ -114,6 +115,8 @@ div {
 
 [fill] {
   flex-grow: 1;
+  min-height: 0;
+  min-width: 0;
 }
 [fill="1"] {
   flex-grow: 1;
@@ -129,6 +132,8 @@ div {
 }
 [scroll] {
   overflow: auto;
+  min-height: 0;
+  min-width: 0;
 }
 
 [max] {

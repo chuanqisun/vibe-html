@@ -1,6 +1,56 @@
+console.log("vibe.js started");
 const selectableElementTags = ["H1", "H2", "H3", "H4", "H5", "H6", "SVG", "P", "IMG", "SPAN", "V-ROWS", "V-COLS", "DIV"];
 const parentElementTags = ["BODY", "V-ROWS", "V-COLS", "DIV"];
 
+// History stack
+// We store the entire body.outerHTML in the history stack
+const historyStack = [{ key: getStorageKey(document.body.outerHTML), value: document.body.outerHTML }];
+let historyPointer = 0;
+
+function getStorageKey(bodyHTML) {
+  const dryDOM = new DOMParser().parseFromString(`<!DOCTYPE html><html><head></head><body>${bodyHTML}</body></html>`, "text/html");
+
+  // delete all styles/scripts
+  const allStyles = [...dryDOM.querySelectorAll("style")];
+  allStyles.forEach((e) => e.remove());
+  const allScripts = [...dryDOM.querySelectorAll("script")];
+  allScripts.forEach((e) => e.remove());
+
+  // delete all data-selected and contendeditable attributes
+  const allSelected = [...dryDOM.querySelectorAll("[data-selected]")];
+  allSelected.forEach((e) => e.removeAttribute("data-selected"));
+  const allEditable = [...dryDOM.querySelectorAll("[contenteditable]")];
+  allEditable.forEach((e) => e.removeAttribute("contenteditable"));
+
+  // delete all children of fluent-icon and v-icon web components
+  const allIcons = [...dryDOM.querySelectorAll("fluent-icon, v-icon")];
+  allIcons.forEach((e) => (e.innerHTML = ""));
+
+  // serialize the DOM
+  const key = dryDOM.body.outerHTML;
+  return key;
+}
+
+// Observe changes to the body and update the history stack
+const observer = new MutationObserver((_mutations) => {
+  const key = getStorageKey(document.body.outerHTML);
+  if (key !== historyStack[historyPointer].key) {
+    historyPointer++;
+    historyStack.splice(historyPointer, historyStack.length - historyPointer, { key, value: document.body.outerHTML });
+    // remove all elements after the current pointer
+    historyStack.splice(historyPointer + 1);
+    console.log(`H@${historyPointer}`, historyStack);
+  }
+});
+
+observer.observe(document.body, {
+  childList: true,
+  subtree: true,
+  attributes: true,
+  attributeFilter: ["contenteditable", "data-selected"],
+});
+
+// Mouse selection
 document.addEventListener("click", (e) => {
   if (!e.ctrlKey) {
     document.querySelectorAll("[data-selected]").forEach((el) => {
@@ -11,6 +61,7 @@ document.addEventListener("click", (e) => {
   e.target.toggleAttribute("data-selected");
 });
 
+// Keyboard shortcuts
 document.addEventListener("keydown", (e) => {
   // INSERT MODE
   // escape - remove contenteditable (exit edit mode)
@@ -27,6 +78,47 @@ document.addEventListener("keydown", (e) => {
   }
 
   // NORMAL MODE
+  // mod + z - undo
+  if ((e.key === "z" || e.key === "Z") && (e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey) {
+    e.preventDefault();
+    if (historyPointer > 0) {
+      historyPointer--;
+
+      observer.disconnect();
+
+      const dom = new DOMParser().parseFromString(`<!DOCTYPE html><html><head></head><body>${historyStack[historyPointer].value}</body></html>`, "text/html");
+      document.body.innerHTML = dom.body.innerHTML;
+      console.log(`UN@${historyPointer}`, historyStack);
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ["contenteditable", "data-selected"],
+      });
+    }
+  }
+
+  // mod + shift + z - redo
+  if ((e.key === "z" || e.key === "Z") && (e.ctrlKey || e.metaKey) && e.shiftKey && !e.altKey) {
+    e.preventDefault();
+    if (historyPointer < historyStack.length - 1) {
+      historyPointer++;
+
+      observer.disconnect();
+
+      const dom = new DOMParser().parseFromString(`<!DOCTYPE html><html><head></head><body>${historyStack[historyPointer].value}</body></html>`, "text/html");
+      document.body.innerHTML = dom.body.innerHTML;
+
+      console.log(`RE@${historyPointer}`, historyStack);
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ["contenteditable", "data-selected"],
+      });
+    }
+  }
+
   // s - to split an element
   if (e.key === "s" && !e.ctrlKey && !e.shiftKey && !e.altKey) {
     e.preventDefault();
@@ -189,6 +281,15 @@ document.addEventListener("keydown", (e) => {
       const allExistingAttrs = [...selected.attributes].map((attr) => `${attr.name}="${attr.value}"`).join(" ");
       selected.removeAttribute("data-selected");
       selected.outerHTML = `<v-rows ${allExistingAttrs}>${selected.outerHTML}</v-rows>`;
+    }
+  }
+
+  // l - toggle long form `scroll`
+  if (e.key === "l" && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+    e.preventDefault();
+    const selected = document.querySelector("[data-selected]");
+    if (selected) {
+      selected.toggleAttribute("scroll");
     }
   }
 
