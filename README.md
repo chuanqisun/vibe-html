@@ -2,7 +2,6 @@
 
 | Shortcut                                                         | Description                                                                   |
 | ---------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| <kbd>Escape</kbd>                                                | Exit edit mode (remove `contenteditable`)                                     |
 | <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>Z</kbd>                    | Undo                                                                          |
 | <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd> | Redo                                                                          |
 | <kbd>S</kbd>                                                     | Split selected element                                                        |
@@ -21,7 +20,7 @@
 | <kbd>L</kbd>                                                     | Toggle `scroll` attribute on selected element                                 |
 | <kbd>0</kbd>                                                     | Unset `fill` attribute                                                        |
 | <kbd>1</kbd>–<kbd>4</kbd>                                        | Set `fill` attribute to corresponding number                                  |
-| <kbd>G</kbd>                                                     | Group selected elements into `<v-rows>` or `<v-cols>`                         |
+| <kbd>G</kbd>                                                     | Group selected elements into a new `<v-rows>` or `<v-cols>`                   |
 | <kbd>ArrowLeft</kbd>/<kbd>ArrowUp</kbd>                          | Select previous sibling element                                               |
 | <kbd>ArrowRight</kbd>/<kbd>ArrowDown</kbd>                       | Select next sibling element                                                   |
 | <kbd>Alt</kbd> + <kbd>ArrowLeft</kbd>/<kbd>ArrowUp</kbd>         | Move selected element up/left                                                 |
@@ -30,3 +29,4 @@
 | <kbd>Shift</kbd> + <kbd>Tab</kbd>                                | Select previous element (reverse pre-order traversal)                         |
 | <kbd>X</kbd>                                                     | Cut (remove) selected elements                                                |
 | <kbd>I</kbd>                                                     | Toggle `contenteditable="plaintext-only"` (edit mode)                         |
+| <kbd>Escape</kbd>                                                | Exit edit mode (remove `contenteditable`)                                     |
