@@ -1,5 +1,12 @@
 # Vibe HTML
 
+## Templates
+
+- [empty.html](./empty.html): A blank template with no elements.
+- [vibe.html](./vibe.html): A basic app layout
+
+## Keyboard Shortcuts
+
 | Shortcut                                                         | Description                                                                   |
 | ---------------------------------------------------------------- | ----------------------------------------------------------------------------- |
 | <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>Z</kbd>                    | Undo                                                                          |
