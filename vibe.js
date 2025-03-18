@@ -66,7 +66,6 @@ document.addEventListener("keydown", (e) => {
   // INSERT MODE
   // escape - remove contenteditable (exit edit mode)
   if (e.key === "Escape" && !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey) {
-    e.preventDefault();
     [...document.querySelectorAll(`[contenteditable]`)].forEach((e) => e.removeAttribute("contenteditable"));
     const sel = window.getSelection();
     sel.removeAllRanges();
@@ -78,6 +77,58 @@ document.addEventListener("keydown", (e) => {
   }
 
   // NORMAL MODE
+  // ? - toggle help
+  if (e.key === "?" && !e.ctrlKey && !e.metaKey && e.shiftKey && !e.altKey) {
+    e.preventDefault();
+
+    // Check if dialog already exists
+    let dialog = document.getElementById("help-dialog");
+
+    // If dialog exists, toggle it
+    if (dialog) {
+      if (dialog.open) {
+        dialog.close();
+      } else {
+        dialog.showModal();
+      }
+      return;
+    }
+
+    // Create new dialog if it doesn't exist
+    dialog = document.createElement("dialog");
+    dialog.id = "help-dialog";
+
+    const contentDiv = document.createElement("div");
+    contentDiv.id = "help-content";
+    contentDiv.innerHTML = "<h2>Loading help...</h2>";
+
+    dialog.appendChild(contentDiv);
+    document.body.appendChild(dialog);
+    dialog.showModal();
+
+    // on close, remove the dialog
+    dialog.addEventListener("close", () => dialog.remove());
+
+    // Fetch README.md
+    fetch("./README.md")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("README.md not found");
+        }
+        return response.text();
+      })
+      .then(async (text) => {
+        // Dynamically import markdown-it
+        try {
+          const markdownIt = await import("https://esm.sh/markdown-it@14.1.0");
+          const md = new markdownIt.default({ html: true });
+          contentDiv.innerHTML = md.render(text);
+        } catch (err) {
+          contentDiv.innerHTML = `<h2>Error loading markdown renderer</h2><p>${err.message}</p><pre>${text}</pre>`;
+        }
+      });
+  }
+
   // mod + z - undo
   if ((e.key === "z" || e.key === "Z") && (e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey) {
     e.preventDefault();

@@ -1,5 +1,3 @@
-# Vibe HTML
-
 ## Templates
 
 - [empty.html](./empty.html): A blank template with no elements.
@@ -9,6 +7,7 @@
 
 | Shortcut                                                         | Description                                                                   |
 | ---------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| <kbd>?</kbd>                                                     | Open help                                                                     |
 | <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>Z</kbd>                    | Undo                                                                          |
 | <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd> | Redo                                                                          |
 | <kbd>S</kbd>                                                     | Split selected element                                                        |

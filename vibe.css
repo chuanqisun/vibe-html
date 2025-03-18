@@ -35,6 +35,12 @@ body {
   gap: var(--block-gap);
 }
 
+dialog:open {
+  margin: auto;
+  max-width: calc(100% - 2rem);
+  max-height: calc(100% - 2rem);
+}
+
 div,
 v-rows,
 v-cols {
