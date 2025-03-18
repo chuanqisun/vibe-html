@@ -36,3 +36,7 @@
 | <kbd>X</kbd>                                                     | Cut (remove) selected elements                                                |
 | <kbd>I</kbd>                                                     | Toggle `contenteditable="plaintext-only"` (edit mode)                         |
 | <kbd>Escape</kbd>                                                | Exit edit mode (remove `contenteditable`)                                     |
+
+## Open Source
+
+Vist [GitHub](https://github.com/chuanqisun/vibe-html)
