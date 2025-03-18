@@ -52,7 +52,7 @@ observer.observe(document.body, {
 
 // Mouse selection
 document.addEventListener("click", (e) => {
-  if (!e.ctrlKey) {
+  if (!(e.ctrlKey || e.metaKey) && !e.shiftKey) {
     document.querySelectorAll("[data-selected]").forEach((el) => {
       if (el === e.target) return;
       el.removeAttribute("data-selected");
@@ -255,8 +255,8 @@ document.addEventListener("keydown", (e) => {
     }
   }
 
-  // n - new child <v-rows> beforeend
-  if (e.key === "n" && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+  // a - add child <v-rows> beforeend
+  if (e.key === "a" && !e.ctrlKey && !e.shiftKey && !e.altKey) {
     e.preventDefault();
     const selected = document.querySelector("[data-selected]");
     if (selected && parentElementTags.includes(selected.tagName)) {
@@ -272,17 +272,17 @@ document.addEventListener("keydown", (e) => {
     }
   }
 
-  // shift + n - new parent <v-rows>
-  if (e.key === "N" && !e.ctrlKey && e.shiftKey && !e.altKey) {
-    e.preventDefault();
-    const selected = document.querySelector("[data-selected]");
-    if (selected) {
-      // We want selection to be on the new element
-      const allExistingAttrs = [...selected.attributes].map((attr) => `${attr.name}="${attr.value}"`).join(" ");
-      selected.removeAttribute("data-selected");
-      selected.outerHTML = `<v-rows ${allExistingAttrs}>${selected.outerHTML}</v-rows>`;
-    }
-  }
+  // // shift + n - new parent <v-rows>
+  // if (e.key === "N" && !e.ctrlKey && e.shiftKey && !e.altKey) {
+  //   e.preventDefault();
+  //   const selected = document.querySelector("[data-selected]");
+  //   if (selected) {
+  //     // We want selection to be on the new element
+  //     const allExistingAttrs = [...selected.attributes].map((attr) => `${attr.name}="${attr.value}"`).join(" ");
+  //     selected.removeAttribute("data-selected");
+  //     selected.outerHTML = `<v-rows ${allExistingAttrs}>${selected.outerHTML}</v-rows>`;
+  //   }
+  // }
 
   // l - toggle long form `scroll`
   if (e.key === "l" && !e.ctrlKey && !e.shiftKey && !e.altKey) {
@@ -302,6 +302,32 @@ document.addEventListener("keydown", (e) => {
         selected.removeAttribute("fill");
       } else {
         selected.setAttribute("fill", e.key);
+      }
+    }
+  }
+
+  // g - group selected elements into a <v-rows> or <v-cols>
+  // use the 1st selected element's parent as container.
+  if (e.key === "g" && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+    e.preventDefault();
+    const selected = document.querySelector("[data-selected]");
+    if (selected) {
+      const parent = selected.parentNode;
+      if (parent) {
+        const groupElement = document.createElement(parent.tagName === "V-COLS" ? "V-COLS" : "V-ROWS");
+        document.querySelectorAll("[data-selected]").forEach((el) => {
+          const cloned = el.cloneNode(true);
+          cloned.removeAttribute("data-selected");
+          groupElement.appendChild(cloned);
+        });
+
+        selected.insertAdjacentElement("afterend", groupElement);
+
+        // remove all selected elements
+        const allSelected = [...document.querySelectorAll("[data-selected]")];
+        allSelected.forEach((el) => el.remove());
+
+        groupElement.toggleAttribute("data-selected", true);
       }
     }
   }
