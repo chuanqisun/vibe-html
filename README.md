@@ -39,4 +39,4 @@
 
 ## Open Source
 
-Vist [GitHub](https://github.com/chuanqisun/vibe-html)
+Viist [GitHub](https://github.com/chuanqisun/vibe-html)
